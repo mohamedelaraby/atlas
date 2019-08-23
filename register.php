@@ -110,6 +110,25 @@ if (isset($_POST['reg_button'])) {
   if ($validPassword > 30 || $validPassword < 6) {
     array_push($errorArray, "password should be at least 6 characters<br>");
   }
+
+  /*---------[ If there is no  [[ ERROR ]] in the error array ]----------------------*/
+  if(is_empty($errorArray)){
+    $userPassword = md5($userPassword); //Encrypte password before sending to the database
+  
+    //Generate Unique username by concatenating firstname and lastname
+    $username = strtolower($firstName .'_'. $lastName);
+    $checkUserNameQuery = mysqli_query($connectToDatabase, "SELECT username FROM users WHERE username='$username'");
+
+    //If userbane exists add number to username
+    $i = 0;
+    while(mysqli_num_rows($checkUserNameQuery) != 0){
+      $i++;
+      $username = $username . '_' . $i;
+      $checkUserNameQuery = mysqli_query($connectToDatabase,"SELECT username FROM users WHERE username='$username'");
+      
+    }
+  
+  }
 }
 
 
